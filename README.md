@@ -1,6 +1,6 @@
 # linkchecker-py
 
-[![CI](https://github.com/jannisbittner/linkchecker-py/actions/workflows/ci.yml/badge.svg)](https://github.com/jannisbittner/linkchecker-py/actions/workflows/ci.yml)
+[![CI](https://github.com/jannis793/linkchecker-py/actions/workflows/ci.yml/badge.svg)](https://github.com/jannis793/linkchecker-py/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/linkchecker-py.svg)](https://pypi.org/project/linkchecker-py/)
 [![Python](https://img.shields.io/pypi/pyversions/linkchecker-py.svg)](https://pypi.org/project/linkchecker-py/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -32,7 +32,7 @@ pipx install linkchecker-py
 For local development:
 
 ```bash
-git clone https://github.com/jannisbittner/linkchecker-py.git
+git clone https://github.com/jannis793/linkchecker-py.git
 cd linkchecker-py
 python -m venv .venv
 . .venv/bin/activate

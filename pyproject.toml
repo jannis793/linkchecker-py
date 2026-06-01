@@ -45,9 +45,9 @@ dev = [
 linkchecker-py = "linkchecker_py.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/jannisbittner/linkchecker-py"
-Issues = "https://github.com/jannisbittner/linkchecker-py/issues"
-Source = "https://github.com/jannisbittner/linkchecker-py"
+Homepage = "https://github.com/jannis793/linkchecker-py"
+Issues = "https://github.com/jannis793/linkchecker-py/issues"
+Source = "https://github.com/jannis793/linkchecker-py"
 
 [tool.setuptools.packages.find]
 where = ["src"]
