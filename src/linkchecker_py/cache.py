@@ -25,6 +25,7 @@ class ResultCache:
             return None
         result = dict(entry["result"])  # type: ignore[index]
         result["status"] = LinkStatus(result["status"])
+        result.pop("cached", None)
         return LinkResult(**result, cached=True)
 
     def set(self, key: str, result: LinkResult) -> None:

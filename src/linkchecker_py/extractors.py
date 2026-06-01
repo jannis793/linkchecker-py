@@ -18,6 +18,15 @@ def slugify_heading(text: str) -> str:
     return slug.strip("-")
 
 
+def unique_anchor(slug: str, anchors: set[str]) -> str:
+    if slug not in anchors:
+        return slug
+    index = 1
+    while f"{slug}-{index}" in anchors:
+        index += 1
+    return f"{slug}-{index}"
+
+
 class _HTMLLinkParser(HTMLParser):
     def __init__(self, path: Path) -> None:
         super().__init__(convert_charrefs=True)
@@ -78,7 +87,7 @@ def _extract_markdown(path: Path, text: str) -> DocumentLinks:
             if inline and inline.type == "inline":
                 slug = slugify_heading(_plain_text(inline))
                 if slug:
-                    anchors.add(slug)
+                    anchors.add(unique_anchor(slug, anchors))
         if token.type == "inline" and token.children:
             for child in token.children:
                 if child.type in {"link_open", "image"}:

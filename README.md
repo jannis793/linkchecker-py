@@ -7,7 +7,7 @@
 
 `linkchecker-py` is a modern async CLI for finding broken links in Markdown files, HTML files, and small to medium websites. It is built for documentation maintainers who want fast checks locally, clean CI output, and reports they can paste into pull requests.
 
-![Terminal demo placeholder](docs/demo-terminal.svg)
+![Terminal demo](docs/demo-terminal.svg)
 
 ## Highlights
 
@@ -83,6 +83,34 @@ Use cached remote results:
 linkchecker-py files docs/ --cache
 ```
 
+Skip `robots.txt` checks for private staging sites you own:
+
+```bash
+linkchecker-py site https://staging.example.com --no-robots
+```
+
+### Exit Codes
+
+`linkchecker-py` is designed for CI:
+
+- `0`: all checked links are OK, skipped, or unknown.
+- `1`: at least one checked link is broken.
+- `2`: the command could not run as requested, such as when `files` finds no supported Markdown or HTML files.
+
+### Configuration
+
+There is no project-level config file yet. Keep options explicit in scripts or CI commands:
+
+```bash
+linkchecker-py files README.md docs/ \
+  --exclude "https://localhost/*" \
+  --exclude "*/private/*" \
+  --concurrency 8 \
+  --rate-limit 2 \
+  --cache \
+  --report link-report.md
+```
+
 ## Reports
 
 JSON reports contain a summary and a row per checked link:
@@ -102,7 +130,7 @@ JSON reports contain a summary and a row per checked link:
 
 Markdown reports are designed for pull request comments and release notes.
 
-## CI Example
+## CI Recipes
 
 ```yaml
 - name: Check documentation links
@@ -111,16 +139,47 @@ Markdown reports are designed for pull request comments and release notes.
     linkchecker-py files README.md docs/ --report link-report.md
 ```
 
+Upload the report even when broken links fail the job:
+
+```yaml
+- name: Check documentation links
+  run: linkchecker-py files README.md docs/ --report link-report.md
+- uses: actions/upload-artifact@v4
+  if: always()
+  with:
+    name: link-report
+    path: link-report.md
+```
+
+## Troubleshooting
+
+- If a URL is reported as blocked by `robots.txt`, either keep the skip or re-run with `--no-robots` for sites you control.
+- If a site rate-limits requests, lower `--concurrency` and set `--rate-limit`.
+- If local file links are skipped as outside the root, run the command from the documentation root or pass all relevant files/directories together.
+- If generated documentation uses custom heading IDs, prefer explicit HTML anchors or link to those IDs directly.
+
+## Limitations
+
+- Website crawling is intended for small to medium sites, not exhaustive internet-scale crawls.
+- JavaScript-rendered links are not executed in a browser.
+- Markdown heading anchors follow common GitHub-style slug behavior; documentation systems with custom slug rules can differ.
+- Cache entries are local to the current user cache directory and expire after one hour by default.
+
 ## Roadmap
 
 - PyPI release automation.
 - SARIF output for GitHub code scanning.
 - Per-host rate-limit configuration.
+- Project-level configuration file.
 - Persistent crawl manifests for very large documentation sites.
 
 ## Contributing
 
 Bug reports, focused feature requests, and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and review expectations.
+
+## Changelog
+
+Release notes are tracked in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

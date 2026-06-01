@@ -43,3 +43,21 @@ def test_extracts_html_links_images_and_element_ids(tmp_path: Path) -> None:
 
     assert {link.url for link in document.links} == {"/docs#overview", "hero.png"}
     assert "overview" in document.anchors
+
+
+def test_extracts_github_style_duplicate_heading_anchors(tmp_path: Path) -> None:
+    doc = tmp_path / "README.md"
+    doc.write_text(
+        """
+# Install
+
+## Install
+
+## Install
+""",
+        encoding="utf-8",
+    )
+
+    document = extract_links_from_file(doc)
+
+    assert {"install", "install-1", "install-2"} <= document.anchors

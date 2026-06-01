@@ -6,11 +6,11 @@ from linkchecker_py.crawler import crawl
 
 
 @pytest.mark.asyncio
-async def test_crawls_same_origin_until_depth_limit() -> None:
+async def test_crawls_same_origin_until_depth_limit_and_checks_links_on_pages() -> None:
     async def handler(request: httpx.Request) -> httpx.Response:
         pages = {
-            "https://example.com/": "<a href='/one'>One</a>",
-            "https://example.com/one": "<a href='/two'>Two</a>",
+            "https://example.com/": "<a href='/one'>One</a><a href='https://external.test/x'>X</a>",
+            "https://example.com/one": "<a href='/two'>Two</a><a href='/missing'>Missing</a>",
             "https://example.com/two": "<a href='/three'>Three</a>",
         }
         if str(request.url) in pages:
@@ -24,5 +24,11 @@ async def test_crawls_same_origin_until_depth_limit() -> None:
 
     seen = await crawl("https://example.com/", checker=checker, max_depth=1)
 
-    assert seen == {"https://example.com/", "https://example.com/one"}
+    assert seen == {
+        "https://example.com/",
+        "https://example.com/one",
+        "https://example.com/two",
+        "https://example.com/missing",
+        "https://external.test/x",
+    }
     await checker.aclose()

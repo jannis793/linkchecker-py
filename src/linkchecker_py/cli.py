@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 from pathlib import Path
 from typing import Annotated
 
@@ -19,6 +20,7 @@ app = typer.Typer(
     help="Fast async broken-link checker for files and websites.",
 )
 console = Console()
+error_console = Console(stderr=True)
 
 
 @app.command()
@@ -104,8 +106,14 @@ async def _run_files(
     respect_robots: bool,
 ) -> int:
     files_to_scan = iter_supported_files(paths)
+    if not files_to_scan:
+        error_console.print(
+            "[red]No supported Markdown or HTML files found.[/red] "
+            "Pass .md, .markdown, .html, or .htm files or directories."
+        )
+        return 2
     options = CheckOptions(
-        root=Path.cwd(),
+        root=_scan_root(paths),
         exclude=exclude,
         concurrency=concurrency,
         rate_limit=rate_limit,
@@ -182,6 +190,13 @@ def _write_report(path: Path | None, results: list[LinkResult]) -> None:
         path.write_text(render_markdown_report(results), encoding="utf-8")
     else:
         path.write_text(render_json_report(results), encoding="utf-8")
+
+
+def _scan_root(paths: list[Path]) -> Path:
+    candidates = [path.resolve() if path.is_dir() else path.resolve().parent for path in paths]
+    if not candidates:
+        return Path.cwd().resolve()
+    return Path(os.path.commonpath(candidates))
 
 
 def _status_style(status: LinkStatus) -> str:

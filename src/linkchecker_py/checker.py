@@ -4,7 +4,7 @@ import asyncio
 import fnmatch
 from dataclasses import dataclass, field
 from pathlib import Path
-from urllib.parse import urldefrag, urljoin, urlparse
+from urllib.parse import unquote, urldefrag, urljoin, urlparse
 
 import httpx
 
@@ -72,6 +72,7 @@ class LinkChecker:
 
     async def _check_remote(self, url: str, source: Path | None) -> LinkResult:
         base_url, fragment = urldefrag(url)
+        fragment = unquote(fragment)
         cached = self._cache.get(url) if self._cache else None
         if cached:
             return cached
@@ -122,6 +123,7 @@ class LinkChecker:
 
     def _check_local(self, url: str, source: Path | None) -> LinkResult:
         raw_path, fragment = urldefrag(url)
+        fragment = unquote(fragment)
         if not raw_path and fragment and source:
             target = source
         else:

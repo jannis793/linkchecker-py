@@ -12,16 +12,17 @@ from linkchecker_py.models import LinkStatus
 async def crawl(start_url: str, checker: LinkChecker, max_depth: int = 1) -> set[str]:
     start = _canonical(start_url)
     origin = _origin(start)
-    seen: set[str] = set()
+    seen_pages: set[str] = set()
+    found_urls: set[str] = {start}
     queue: deque[tuple[str, int]] = deque([(start, 0)])
 
     while queue:
         url, depth = queue.popleft()
-        if url in seen or depth > max_depth:
+        if url in seen_pages or depth > max_depth:
             continue
-        seen.add(url)
+        seen_pages.add(url)
         result = await checker.check_url(url)
-        if result.status is not LinkStatus.OK or depth == max_depth:
+        if result.status is not LinkStatus.OK:
             continue
         try:
             response = await checker.client.get(url)
@@ -29,9 +30,10 @@ async def crawl(start_url: str, checker: LinkChecker, max_depth: int = 1) -> set
             continue
         for href in extract_remote_links(response.text, url):
             candidate = _canonical(href)
-            if _origin(candidate) == origin and candidate not in seen:
+            found_urls.add(candidate)
+            if _origin(candidate) == origin and depth < max_depth and candidate not in seen_pages:
                 queue.append((candidate, depth + 1))
-    return seen
+    return found_urls
 
 
 def _canonical(url: str) -> str:
