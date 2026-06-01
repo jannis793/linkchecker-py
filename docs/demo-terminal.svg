@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420" role="img" aria-label="linkchecker-py terminal demo placeholder">
+  <rect width="920" height="420" rx="18" fill="#111827"/>
+  <rect x="24" y="24" width="872" height="372" rx="12" fill="#0b1020" stroke="#26324a"/>
+  <circle cx="54" cy="52" r="7" fill="#ff5f56"/>
+  <circle cx="78" cy="52" r="7" fill="#ffbd2e"/>
+  <circle cx="102" cy="52" r="7" fill="#27c93f"/>
+  <text x="48" y="104" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" fill="#d1d5db">$ linkchecker-py files README.md docs/ --report link-report.md</text>
+  <text x="48" y="154" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" fill="#34d399">ok</text>
+  <text x="120" y="154" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" fill="#e5e7eb">https://example.com/docs</text>
+  <text x="48" y="194" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" fill="#f87171">broken</text>
+  <text x="120" y="194" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" fill="#e5e7eb">https://example.com/missing</text>
+  <text x="48" y="250" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" fill="#93c5fd">Report written to link-report.md</text>
+  <text x="48" y="306" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" fill="#d1d5db">2 links checked, 1 broken, 0 skipped</text>
+</svg>
