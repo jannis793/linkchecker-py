@@ -8,6 +8,7 @@ from urllib.parse import unquote, urldefrag, urljoin, urlparse
 
 import httpx
 
+from linkchecker_py._version import __version__
 from linkchecker_py.cache import ResultCache
 from linkchecker_py.extractors import extract_links_from_file, extract_links_from_text
 from linkchecker_py.models import LinkResult, LinkStatus
@@ -21,7 +22,7 @@ class CheckOptions:
     timeout: float = 10.0
     concurrency: int = 20
     rate_limit: float = 0.0
-    user_agent: str = "linkchecker-py/0.1"
+    user_agent: str = f"linkchecker-py/{__version__}"
     cache: bool = False
     cache_ttl: int = 3600
     respect_robots: bool = True

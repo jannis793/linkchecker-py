@@ -17,4 +17,20 @@ def test_renders_markdown_report_summary_and_rows() -> None:
     )
 
     assert "# Link Check Report" in report
+    assert "- Unknown: 0" in report
     assert "| https://example.com/missing | broken | 404 |" in report
+
+
+def test_markdown_report_escapes_table_cells() -> None:
+    report = render_markdown_report(
+        [
+            LinkResult(
+                url="https://example.com/a|b",
+                status=LinkStatus.BROKEN,
+                message="bad | link\nretry later",
+            )
+        ]
+    )
+
+    assert "https://example.com/a\\|b" in report
+    assert "bad \\| link<br>retry later" in report

@@ -4,7 +4,6 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "linkchecker-py"
-version = "0.1.0"
 description = "Fast async broken-link checker for Markdown, HTML, and websites."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,10 +11,12 @@ license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "linkchecker-py maintainers" }]
 keywords = ["links", "markdown", "html", "crawler", "cli", "broken-links"]
+dynamic = ["version"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
   "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -35,10 +36,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+  "build>=1.2",
   "pytest>=8.2",
   "pytest-asyncio>=0.23",
   "respx>=0.21",
   "ruff>=0.5",
+  "twine>=5.1",
 ]
 
 [project.scripts]
@@ -48,9 +51,13 @@ linkchecker-py = "linkchecker_py.cli:app"
 Homepage = "https://github.com/jannis793/linkchecker-py"
 Issues = "https://github.com/jannis793/linkchecker-py/issues"
 Source = "https://github.com/jannis793/linkchecker-py"
+Changelog = "https://github.com/jannis793/linkchecker-py/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.dynamic]
+version = { attr = "linkchecker_py._version.__version__" }
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

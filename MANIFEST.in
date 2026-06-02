@@ -1,0 +1,8 @@
+include CHANGELOG.md
+include CODE_OF_CONDUCT.md
+include CONTRIBUTING.md
+include ROADMAP.md
+include SECURITY.md
+include docs/RELEASE.md
+include docs/demo-terminal.svg
+recursive-include .github *.md *.yml

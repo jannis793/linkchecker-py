@@ -4,7 +4,13 @@ All notable changes to `linkchecker-py` will be documented in this file.
 
 The project follows semantic versioning once releases are published.
 
-## 0.1.0 - Unreleased
+## Unreleased
+
+- Improve open-source maintainer documentation, release guidance, and issue workflow files.
+- Include unknown results in Markdown report summaries and escape Markdown table cells.
+- Keep runtime version metadata in one package module and expose it as `linkchecker_py.__version__`.
+
+## 0.1.0 - 2026-06-01
 
 - Add async Markdown, HTML, and website link checking.
 - Add local file and fragment validation.

@@ -2,8 +2,17 @@ from pathlib import Path
 
 import pytest
 
+import linkchecker_py
 from linkchecker_py.cli import _run_files
 from linkchecker_py.reports import render_json_report
+
+
+def test_package_version_matches_project_metadata() -> None:
+    pyproject = Path("pyproject.toml").read_text(encoding="utf-8")
+
+    assert 'dynamic = ["version"]' in pyproject
+    assert 'version = { attr = "linkchecker_py._version.__version__" }' in pyproject
+    assert linkchecker_py.__version__ == "0.1.0"
 
 
 @pytest.mark.asyncio

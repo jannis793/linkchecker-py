@@ -24,14 +24,16 @@ def render_markdown_report(results: list[LinkResult]) -> str:
         f"- OK: {summary['ok']}",
         f"- Broken: {summary['broken']}",
         f"- Skipped: {summary['skipped']}",
+        f"- Unknown: {summary['unknown']}",
         "",
         "| URL | Status | Code | Source | Message |",
         "| --- | --- | --- | --- | --- |",
     ]
     for result in results:
         lines.append(
-            f"| {result.url} | {result.status.value} | {result.status_code or ''} | "
-            f"{result.source or ''} | {result.message or ''} |"
+            f"| {_markdown_table_cell(result.url)} | {result.status.value} | "
+            f"{result.status_code or ''} | {_markdown_table_cell(result.source or '')} | "
+            f"{_markdown_table_cell(result.message or '')} |"
         )
     return "\n".join(lines) + "\n"
 
@@ -44,3 +46,7 @@ def summarize(results: list[LinkResult]) -> dict[str, int]:
         "skipped": sum(result.status is LinkStatus.SKIPPED for result in results),
         "unknown": sum(result.status is LinkStatus.UNKNOWN for result in results),
     }
+
+
+def _markdown_table_cell(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("|", "\\|").replace("\n", "<br>")
