@@ -6,6 +6,8 @@ The project follows semantic versioning once releases are published.
 
 ## Unreleased
 
+## 0.1.1 - 2026-06-02
+
 - Improve open-source maintainer documentation, release guidance, and issue workflow files.
 - Include unknown results in Markdown report summaries and escape Markdown table cells.
 - Keep runtime version metadata in one package module and expose it as `linkchecker_py.__version__`.

@@ -183,7 +183,7 @@ pytest
 python -m build
 ```
 
-Release steps are documented in [docs/RELEASE.md](docs/RELEASE.md). The current tag is `v0.1.0`; the next patch release would normally be `v0.1.1` if the changes are documentation or bug fixes.
+Release steps are documented in [docs/RELEASE.md](docs/RELEASE.md). The current tag is `v0.1.1`; the next patch release would normally be `v0.1.2` if the changes are documentation or bug fixes.
 
 ## Troubleshooting
 
