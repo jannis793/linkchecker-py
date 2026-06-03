@@ -37,7 +37,26 @@ The project is not currently documented here as published on PyPI. Do not add Py
 
 ## PyPI and TestPyPI setup
 
-Before publishing for the first time:
+Before publishing for the first time, prefer Trusted Publishing over long-lived API tokens:
+
+- On TestPyPI, add a pending GitHub publisher for:
+  - PyPI project name: `linkchecker-py`
+  - Owner: `jannis793`
+  - Repository name: `linkchecker-py`
+  - Workflow name: `publish.yml`
+  - Environment name: `testpypi`
+- On PyPI, add a pending GitHub publisher for:
+  - PyPI project name: `linkchecker-py`
+  - Owner: `jannis793`
+  - Repository name: `linkchecker-py`
+  - Workflow name: `publish.yml`
+  - Environment name: `pypi`
+- Run the `Publish` workflow manually with `target=testpypi`.
+- Verify install from TestPyPI in a clean environment.
+- Run the `Publish` workflow manually with `target=pypi`.
+- Verify install from PyPI in a clean environment.
+
+For fallback token publishing:
 
 - Create or sign in to accounts at https://test.pypi.org/ and https://pypi.org/.
 - Enable two-factor authentication on both accounts.
@@ -52,13 +71,13 @@ export TWINE_USERNAME=__token__
 export TWINE_PASSWORD=pypi-...
 ```
 
-TestPyPI dry run:
+TestPyPI token dry run:
 
 ```bash
 python -m twine upload --repository testpypi dist/*
 ```
 
-PyPI release:
+PyPI token release:
 
 ```bash
 python -m twine upload dist/*
