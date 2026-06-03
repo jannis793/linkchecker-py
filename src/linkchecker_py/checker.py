@@ -126,7 +126,7 @@ class LinkChecker:
         raw_path, fragment = urldefrag(url)
         fragment = unquote(fragment)
         if not raw_path and fragment and source:
-            target = source
+            target = source.resolve()
         else:
             base = source.parent if source else self.options.root
             target = (base / raw_path).resolve()

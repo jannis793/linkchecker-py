@@ -8,6 +8,7 @@ The project follows semantic versioning once releases are published.
 
 - Add local Markdown/HTML examples and an adaptable GitHub Actions link-check workflow.
 - Document first-time PyPI and TestPyPI credential setup.
+- Fix same-document fragment checks when the source path is relative.
 
 ## 0.1.1 - 2026-06-02
 

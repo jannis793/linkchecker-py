@@ -69,6 +69,23 @@ async def test_checks_local_file_anchor(tmp_path: Path) -> None:
 
 
 @pytest.mark.asyncio
+async def test_checks_same_document_anchor_from_relative_source(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    readme = tmp_path / "README.md"
+    readme.write_text("# Overview\n\n[Back](#overview)", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+
+    checker = LinkChecker(CheckOptions(root=tmp_path))
+
+    results = await checker.check_urls(["#overview"], source=Path("README.md"))
+
+    assert results[0].status is LinkStatus.OK
+    await checker.aclose()
+
+
+@pytest.mark.asyncio
 async def test_decodes_percent_encoded_fragments_for_local_anchors(tmp_path: Path) -> None:
     guide = tmp_path / "guide.html"
     guide.write_text("<h1 id='hello world'>Hello</h1>", encoding="utf-8")
