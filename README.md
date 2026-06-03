@@ -1,7 +1,8 @@
 # linkchecker-py
 
 [![CI](https://github.com/jannis793/linkchecker-py/actions/workflows/ci.yml/badge.svg)](https://github.com/jannis793/linkchecker-py/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
+[![PyPI](https://img.shields.io/pypi/v/linkchecker-py.svg)](https://pypi.org/project/linkchecker-py/)
+[![Python](https://img.shields.io/pypi/pyversions/linkchecker-py.svg)](https://pypi.org/project/linkchecker-py/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 `linkchecker-py` is a fast async CLI for finding broken links in Markdown files, HTML files, and small to medium websites. It exists for documentation maintainers who want deterministic local checks, clean CI failures, and reports that can be attached to pull requests.
@@ -10,9 +11,7 @@
 
 ## Project Status
 
-This project is early but actively maintained. The core CLI, parser, checker, crawler, reports, tests, and CI are in place, but the project should still be treated as pre-1.0 while configuration, release automation, and broader compatibility work mature.
-
-The package metadata is prepared for publishing, but this README does not claim PyPI availability until the package is actually published.
+This project is early but actively maintained. The core CLI, parser, checker, crawler, reports, tests, CI, and PyPI publishing are in place, but the project should still be treated as pre-1.0 while configuration and broader compatibility work mature.
 
 ## GitHub Metadata
 
@@ -38,6 +37,18 @@ Recommended GitHub topics:
 
 ## Install
 
+Use `pipx` for an isolated CLI install:
+
+```bash
+pipx install linkchecker-py
+```
+
+Or install with `pip`:
+
+```bash
+python -m pip install linkchecker-py
+```
+
 ### From source
 
 ```bash
@@ -52,12 +63,6 @@ python -m pip install -e .
 
 ```bash
 python -m pip install -e ".[dev]"
-```
-
-Once the package is published, the intended CLI install path will be:
-
-```bash
-pipx install linkchecker-py
 ```
 
 ## Quickstart

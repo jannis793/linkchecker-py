@@ -33,7 +33,7 @@ Use `v0.2.0` instead if the release adds new user-facing features rather than do
 
 ## Publishing
 
-The project is not currently documented here as published on PyPI. Do not add PyPI badges or install commands until the package exists there.
+The project is published on PyPI at https://pypi.org/project/linkchecker-py/ and on TestPyPI at https://test.pypi.org/project/linkchecker-py/.
 
 ## PyPI and TestPyPI setup
 

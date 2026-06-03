@@ -33,4 +33,4 @@ linkchecker-py files examples/site/page.html
 
 ## CI example
 
-See [github-actions-link-check.yml](github-actions-link-check.yml) for a workflow another repository can adapt today by installing `linkchecker-py` from the GitHub release tag. Once the package is published on PyPI, the install step can become `python -m pip install linkchecker-py`.
+See [github-actions-link-check.yml](github-actions-link-check.yml) for a workflow another repository can adapt by installing `linkchecker-py` from PyPI.
