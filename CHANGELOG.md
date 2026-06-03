@@ -6,6 +6,11 @@ The project follows semantic versioning once releases are published.
 
 ## Unreleased
 
+## 0.1.3 - 2026-06-03
+
+- Add manual Trusted Publishing workflow for TestPyPI and PyPI.
+- Prefer pending Trusted Publisher setup in release documentation.
+
 ## 0.1.2 - 2026-06-03
 
 - Add local Markdown/HTML examples and an adaptable GitHub Actions link-check workflow.

@@ -1,6 +1,6 @@
 # Release Checklist
 
-This project currently has a `v0.1.2` tag and package metadata for `0.1.2`. Use this checklist before the next release.
+This project currently has a `v0.1.3` tag and package metadata for `0.1.3`. Use this checklist before the next release.
 
 ## Before tagging
 
@@ -22,11 +22,11 @@ python -m twine check dist/*
 
 ## Tagging
 
-Recommended next tag after the existing `v0.1.2` tag:
+Recommended next tag after the existing `v0.1.3` tag:
 
 ```bash
-git tag v0.1.3
-git push origin v0.1.3
+git tag v0.1.4
+git push origin v0.1.4
 ```
 
 Use `v0.2.0` instead if the release adds new user-facing features rather than documentation or bug fixes.
