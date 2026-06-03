@@ -25,6 +25,14 @@ linkchecker-py files examples/site \
   --report examples/link-report.md
 ```
 
+Expected result: exit code `0` with a summary similar to:
+
+```text
+Link check: 0 broken of 5
+```
+
+The passing example checks local Markdown and HTML links, validates fragments, and skips unsupported schemes such as `mailto:`.
+
 You can also inspect the HTML fixture directly:
 
 ```bash

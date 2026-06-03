@@ -33,3 +33,26 @@ jobs:
       - name: Check package metadata
         if: matrix.python-version == '3.12'
         run: python -m twine check dist/*
+
+  self-check-links:
+    name: Dogfood linkchecker-py
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: python -m pip install -e .
+      - name: Check repository docs links
+        run: |
+          linkchecker-py files README.md docs/ examples/ \
+            --exclude "https://*" \
+            --exclude "http://*" \
+            --exclude "missing.md" \
+            --report linkchecker-self-check.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: linkchecker-self-check
+          path: linkchecker-self-check.md

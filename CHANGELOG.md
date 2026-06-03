@@ -6,6 +6,9 @@ The project follows semantic versioning once releases are published.
 
 ## Unreleased
 
+- Dogfood `linkchecker-py` in CI against this repository's README, docs, and examples.
+- Add 60-second onboarding, clearer examples output, starter issue guidance, maintainer labels, and triage documentation.
+
 ## 0.1.3 - 2026-06-03
 
 - Add manual Trusted Publishing workflow for TestPyPI and PyPI.

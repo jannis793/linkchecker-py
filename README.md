@@ -1,6 +1,7 @@
 # linkchecker-py
 
 [![CI](https://github.com/jannis793/linkchecker-py/actions/workflows/ci.yml/badge.svg)](https://github.com/jannis793/linkchecker-py/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/jannis793/linkchecker-py?sort=semver)](https://github.com/jannis793/linkchecker-py/releases)
 [![PyPI](https://img.shields.io/pypi/v/linkchecker-py.svg)](https://pypi.org/project/linkchecker-py/)
 [![Python](https://img.shields.io/pypi/pyversions/linkchecker-py.svg)](https://pypi.org/project/linkchecker-py/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -66,6 +67,20 @@ python -m pip install -e ".[dev]"
 ```
 
 ## Quickstart
+
+### Try It In 60 Seconds
+
+After installing with `pipx install linkchecker-py`, create two tiny local docs and check them:
+
+```bash
+mkdir linkchecker-py-try
+cd linkchecker-py-try
+printf '# Demo\n\n[Guide](guide.md#setup)\n' > README.md
+printf '# Guide\n\n## Setup\n\nReady.\n' > guide.md
+linkchecker-py files README.md guide.md
+```
+
+Expected result: exit code `0` and a summary like `Link check: 0 broken of 1`.
 
 Check the README and docs in this repository:
 
@@ -172,6 +187,17 @@ Exit codes are designed for CI:
 
 ## CI Usage
 
+Install the published CLI from PyPI in another repository:
+
+```yaml
+- uses: actions/checkout@v4
+- uses: actions/setup-python@v5
+  with:
+    python-version: "3.12"
+- run: python -m pip install linkchecker-py
+- run: linkchecker-py files README.md docs/ --report link-report.md
+```
+
 Source checkout workflow:
 
 ```yaml
@@ -196,6 +222,7 @@ Upload the report even when broken links fail the job:
 ```
 
 The repository's own CI runs `ruff check .` and `pytest` on Python 3.10, 3.11, 3.12, and 3.13.
+It also dogfoods `linkchecker-py` against this repository's README, docs, and examples, with only external links and the intentionally broken example fixture excluded. That is repo-local usage proof, not a claim of third-party adoption.
 
 A complete workflow another repository can adapt is available at [examples/github-actions-link-check.yml](examples/github-actions-link-check.yml).
 
