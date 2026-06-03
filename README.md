@@ -86,6 +86,24 @@ Crawl a website up to depth 2:
 linkchecker-py site https://example.com --depth 2
 ```
 
+## Try It Locally
+
+The [examples](examples/) directory contains small Markdown and HTML fixtures. This command is expected to fail with exit code `1` because the fixture includes one intentionally missing local file:
+
+```bash
+linkchecker-py files examples/site --report examples/link-report.md
+```
+
+Run a passing example by excluding that intentional broken link:
+
+```bash
+linkchecker-py files examples/site \
+  --exclude "missing.md" \
+  --report examples/link-report.md
+```
+
+The generated report is local output and is not committed.
+
 ## Common Options
 
 Skip links that are rate-limited, private, or intentionally local:
@@ -173,6 +191,8 @@ Upload the report even when broken links fail the job:
 ```
 
 The repository's own CI runs `ruff check .` and `pytest` on Python 3.10, 3.11, 3.12, and 3.13.
+
+A complete workflow another repository can adapt is available at [examples/github-actions-link-check.yml](examples/github-actions-link-check.yml).
 
 ## Development
 

@@ -5,4 +5,5 @@ include ROADMAP.md
 include SECURITY.md
 include docs/RELEASE.md
 include docs/demo-terminal.svg
+recursive-include examples *.md *.html *.yml
 recursive-include .github *.md *.yml

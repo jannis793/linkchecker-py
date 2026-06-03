@@ -35,6 +35,23 @@ Use `v0.2.0` instead if the release adds new user-facing features rather than do
 
 The project is not currently documented here as published on PyPI. Do not add PyPI badges or install commands until the package exists there.
 
+## PyPI and TestPyPI setup
+
+Before publishing for the first time:
+
+- Create or sign in to accounts at https://test.pypi.org/ and https://pypi.org/.
+- Enable two-factor authentication on both accounts.
+- Create a TestPyPI API token scoped to the `linkchecker-py` project after the first upload, or account-wide for the first upload only.
+- Create a PyPI API token scoped to the `linkchecker-py` project after the first upload, or account-wide for the first upload only.
+- Prefer replacing long-lived tokens with Trusted Publishing from this GitHub repository once the project exists on each index.
+
+For local token publishing, export credentials without committing them:
+
+```bash
+export TWINE_USERNAME=__token__
+export TWINE_PASSWORD=pypi-...
+```
+
 TestPyPI dry run:
 
 ```bash
