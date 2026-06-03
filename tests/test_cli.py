@@ -12,7 +12,7 @@ def test_package_version_matches_project_metadata() -> None:
 
     assert 'dynamic = ["version"]' in pyproject
     assert 'version = { attr = "linkchecker_py._version.__version__" }' in pyproject
-    assert linkchecker_py.__version__ == "0.1.1"
+    assert linkchecker_py.__version__ == "0.1.2"
 
 
 @pytest.mark.asyncio
