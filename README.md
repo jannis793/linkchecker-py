@@ -36,6 +36,10 @@ Recommended GitHub topics:
 - Caches remote results between runs.
 - Prints Rich terminal tables and writes JSON or Markdown reports.
 
+## Built with Codex and GPT-5.6
+
+This project was built and tested in OpenAI Codex with GPT-5.6. Codex was used to plan the CLI, implement the async checker and crawler, add Markdown and HTML parsing and report formats, write tests and CI workflows, and iterate on the documentation and examples. GPT-5.6 helped reason through the architecture, edge cases, test coverage, and user-facing setup instructions. The resulting code and test commands were reviewed and run in the repository.
+
 ## Install
 
 Use `pipx` for an isolated CLI install:
