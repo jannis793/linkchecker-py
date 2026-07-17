@@ -1,5 +1,7 @@
+import json
+
 from linkchecker_py.models import LinkResult, LinkStatus
-from linkchecker_py.reports import render_json_report, render_markdown_report
+from linkchecker_py.reports import render_json_report, render_markdown_report, render_sarif_report
 
 
 def test_renders_json_report() -> None:
@@ -34,3 +36,23 @@ def test_markdown_report_escapes_table_cells() -> None:
 
     assert "https://example.com/a\\|b" in report
     assert "bad \\| link<br>retry later" in report
+
+
+def test_reports_include_source_lines_and_sarif_locations() -> None:
+    result = LinkResult(
+        url="missing.md",
+        status=LinkStatus.BROKEN,
+        source="docs/README.md",
+        line=17,
+        message="file not found",
+    )
+
+    json_report = json.loads(render_json_report([result]))
+    markdown = render_markdown_report([result])
+    sarif = json.loads(render_sarif_report([result]))
+
+    assert json_report["links"][0]["line"] == 17
+    assert "| docs/README.md | 17 |" in markdown
+    location = sarif["runs"][0]["results"][0]["locations"][0]["physicalLocation"]
+    assert location["artifactLocation"]["uri"] == "docs/README.md"
+    assert location["region"]["startLine"] == 17
