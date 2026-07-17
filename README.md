@@ -31,10 +31,12 @@ Recommended GitHub topics:
 - Validates HTTP status codes and URL fragments such as `#install`.
 - Checks local file links and generated Markdown heading anchors.
 - Excludes noisy links with glob patterns.
-- Controls concurrency and rate limiting for polite checks.
-- Respects `robots.txt` by default.
+- Deduplicates requests within a run while retaining every source occurrence.
+- Controls concurrency, per-host rate limiting, retries, and `robots.txt` politely.
 - Caches remote results between runs.
-- Prints Rich terminal tables and writes JSON or Markdown reports.
+- Reads project defaults from TOML with explicit CLI override precedence.
+- Prints source lines and writes JSON, Markdown, or SARIF reports.
+- Emits native GitHub Actions annotations for broken links.
 
 ## Built with Codex, GPT-5.5, and GPT-5.6
 
@@ -141,6 +143,12 @@ Lower concurrency and add request pacing for remote checks:
 linkchecker-py site https://example.com --depth 1 --concurrency 4 --rate-limit 1
 ```
 
+Tune bounded retries for transient `429`, `502`, `503`, `504`, timeout, and connection errors:
+
+```bash
+linkchecker-py site https://example.com --retries 3 --retry-backoff 0.5
+```
+
 Use cached remote results:
 
 ```bash
@@ -153,21 +161,33 @@ Skip `robots.txt` checks for private staging sites you own:
 linkchecker-py site https://staging.example.com --no-robots
 ```
 
-There is no project-level config file yet. Keep options explicit in scripts or CI commands:
+Put shared defaults in `pyproject.toml`; command-line options override configured values:
+
+```toml
+[tool.linkchecker-py]
+exclude = ["https://localhost/*", "*/private/*"]
+concurrency = 8
+rate_limit = 2
+cache = true
+report = "artifacts/link-report.sarif"
+respect_robots = true
+retries = 2
+retry_backoff = 0.25
+fail_on = "unknown"
+github_annotations = true
+```
+
+The same keys can be placed at the top level of `.linkchecker-py.toml`. Use `--config PATH`
+to select a specific file. For example, this keeps all configured defaults but overrides concurrency:
 
 ```bash
-linkchecker-py files README.md docs/ \
-  --exclude "https://localhost/*" \
-  --exclude "*/private/*" \
-  --concurrency 8 \
-  --rate-limit 2 \
-  --cache \
-  --report link-report.md
+linkchecker-py files README.md docs/ --concurrency 4
 ```
 
 ## Output and Exit Codes
 
-Terminal output is a Rich table with status, URL, status code, source, and message. JSON reports contain a summary plus a row per checked link:
+Terminal output is a Rich table with status, URL, status code, source, line, and message. JSON
+reports contain a summary plus a row per link occurrence:
 
 ```json
 {
@@ -184,7 +204,7 @@ Terminal output is a Rich table with status, URL, status code, source, and messa
 
 Exit codes are designed for CI:
 
-- `0`: all checked links are OK, skipped, or unknown.
+- `0`: all checked links are OK, skipped, or unknown (unless `--fail-on unknown` is set).
 - `1`: at least one checked link is broken.
 - `2`: the command could not run as requested, such as when `files` finds no supported Markdown or HTML files.
 
@@ -224,6 +244,21 @@ Upload the report even when broken links fail the job:
     path: link-report.md
 ```
 
+For inline workflow-log diagnostics and a Code Scanning artifact:
+
+```yaml
+- name: Check documentation links
+  run: >-
+    linkchecker-py files README.md docs/
+    --github-annotations
+    --fail-on unknown
+    --report link-report.sarif
+- uses: github/codeql-action/upload-sarif@v3
+  if: always()
+  with:
+    sarif_file: link-report.sarif
+```
+
 The repository's own CI runs `ruff check .` and `pytest` on Python 3.10, 3.11, 3.12, and 3.13.
 It also dogfoods `linkchecker-py` against this repository's README, docs, and examples, with only external links and the intentionally broken example fixture excluded. That is repo-local usage proof, not a claim of third-party adoption.
 
@@ -253,6 +288,7 @@ Release steps are documented in [docs/RELEASE.md](docs/RELEASE.md). The current 
 - JavaScript-rendered links are not executed in a browser.
 - Markdown heading anchors follow common GitHub-style slug behavior; documentation systems with custom slug rules can differ.
 - Cache entries are local to the current user cache directory and expire after one hour by default.
+- Redirect hops are followed by the HTTP client; discovered relative links use the final response URL.
 
 ## Roadmap
 

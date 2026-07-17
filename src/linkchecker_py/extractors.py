@@ -42,7 +42,7 @@ class _HTMLLinkParser(HTMLParser):
         for link_attr in ("href", "src"):
             url = attr_map.get(link_attr)
             if url:
-                self.links.append(Link(url=url, source=self.path))
+                self.links.append(Link(url=url, source=self.path, line=self.getpos()[0]))
 
 
 def extract_links_from_file(path: Path) -> DocumentLinks:
@@ -54,8 +54,7 @@ def extract_links_from_file(path: Path) -> DocumentLinks:
 
 
 def extract_links_from_text(text: str, base: str) -> tuple[list[str], set[str]]:
-    parser = _HTMLLinkParser(Path(base))
-    parser.feed(text)
+    parser = _parse_html(text, Path(base))
     return [link.url for link in parser.links], parser.anchors
 
 
@@ -89,33 +88,85 @@ def _extract_markdown(path: Path, text: str) -> DocumentLinks:
                 if slug:
                     anchors.add(unique_anchor(slug, anchors))
         if token.type == "inline" and token.children:
+            source_text, source_line = _token_source(text, token.map)
+            search_offsets: dict[str, int] = {}
             for child in token.children:
                 if child.type in {"link_open", "image"}:
                     href = child.attrGet("href") or child.attrGet("src")
                     if href:
-                        line = token.map[0] + 1 if token.map else None
+                        line, search_offsets[href] = _find_line(
+                            source_text,
+                            href,
+                            source_line,
+                            search_offsets.get(href, 0),
+                        )
                         links.append(Link(url=href, source=path, line=line))
                 if child.type == "html_inline":
-                    html_links, html_anchors = extract_links_from_text(child.content, str(path))
-                    links.extend(
-                        Link(url=url, source=path, line=token.map[0] + 1 if token.map else None)
-                        for url in html_links
+                    parser = _parse_html(child.content, path)
+                    html_line, search_offsets[child.content] = _find_line(
+                        source_text,
+                        child.content,
+                        source_line,
+                        search_offsets.get(child.content, 0),
                     )
-                    anchors.update(html_anchors)
+                    links.extend(
+                        Link(
+                            url=link.url,
+                            source=path,
+                            line=(html_line or 1) + (link.line or 1) - 1,
+                        )
+                        for link in parser.links
+                    )
+                    anchors.update(parser.anchors)
         if token.type == "html_block":
-            html_links, html_anchors = extract_links_from_text(token.content, str(path))
+            parser = _parse_html(token.content, path)
+            block_line = token.map[0] + 1 if token.map else 1
             links.extend(
-                Link(url=url, source=path, line=token.map[0] + 1 if token.map else None)
-                for url in html_links
+                Link(
+                    url=link.url,
+                    source=path,
+                    line=block_line + (link.line or 1) - 1,
+                )
+                for link in parser.links
             )
-            anchors.update(html_anchors)
+            anchors.update(parser.anchors)
 
-    autolinks = re.findall(r"<(https?://[^>\s]+)>", text)
+    autolinks = re.finditer(r"<(https?://[^>\s]+)>", text)
     known = {link.url for link in links}
-    links.extend(Link(url=url, source=path) for url in autolinks if url not in known)
+    links.extend(
+        Link(url=match.group(1), source=path, line=text.count("\n", 0, match.start()) + 1)
+        for match in autolinks
+        if match.group(1) not in known
+    )
     return DocumentLinks(path=path, links=tuple(links), anchors=frozenset(anchors))
 
 
 def _plain_text(token: object) -> str:
     children = getattr(token, "children", None) or []
     return "".join(getattr(child, "content", "") for child in children)
+
+
+def _parse_html(text: str, path: Path) -> _HTMLLinkParser:
+    parser = _HTMLLinkParser(path)
+    parser.feed(text)
+    return parser
+
+
+def _token_source(text: str, token_map: list[int] | None) -> tuple[str, int | None]:
+    if not token_map:
+        return "", None
+    lines = text.splitlines(keepends=True)
+    return "".join(lines[token_map[0] : token_map[1]]), token_map[0] + 1
+
+
+def _find_line(
+    source_text: str,
+    url: str,
+    start_line: int | None,
+    search_offset: int,
+) -> tuple[int | None, int]:
+    position = source_text.find(url, search_offset)
+    if position < 0:
+        return start_line, search_offset
+    line = (start_line or 1) + source_text.count("\n", 0, position)
+    return line, position + len(url)

@@ -8,6 +8,12 @@ The project follows semantic versioning once releases are published.
 
 - Dogfood `linkchecker-py` in CI against this repository's README, docs, and examples.
 - Add 60-second onboarding, clearer examples output, starter issue guidance, maintainer labels, and triage documentation.
+- Reuse crawl responses and deduplicate run-local HTTP requests while preserving source occurrences and fragment validation.
+- Resolve discovered links against final redirect URLs and retain URL fragments during site crawls.
+- Add concurrency-safe per-host pacing, coalesced paced `robots.txt` requests, and configurable bounded retries for transient failures.
+- Propagate source line numbers through terminal, JSON, Markdown, GitHub Actions annotation, and SARIF output.
+- Correct local URL query, percent-encoding, same-document, and directory handling.
+- Add project TOML configuration with CLI override precedence and strict `--fail-on unknown` behavior.
 
 ## 0.1.3 - 2026-06-03
 

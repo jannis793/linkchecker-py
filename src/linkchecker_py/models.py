@@ -34,3 +34,4 @@ class LinkResult:
     status_code: int | None = None
     message: str | None = None
     cached: bool = False
+    line: int | None = None

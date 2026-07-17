@@ -4,9 +4,6 @@
 
 ## Near term
 
-- Add a project-level configuration file for common excludes, concurrency, cache, and report settings.
-- Add GitHub annotation output for pull request logs.
-- Add SARIF output so broken links can appear in GitHub code scanning.
 - Add JUnit XML output for CI systems that already collect test reports.
 - Add per-host rate-limit settings for mixed documentation and API-reference sites.
 - Improve Markdown anchor compatibility for documentation systems with custom slug rules.
@@ -23,9 +20,14 @@
 
 These are maintainer-generated ideas for contributors. They are not external feature requests.
 
-- **Config file support**: add `pyproject.toml` or `.linkchecker-py.toml` support for excludes, concurrency, rate limit, cache, report path, and robots behavior. Done when CLI flags still override config values and tests cover config discovery.
-- **GitHub annotation output**: add an output mode that prints `::error file=...,line=...::...` for broken links in Actions logs. Done when annotations include the source path and existing report formats still work.
-- **SARIF or JUnit report support**: add one CI-native report format beyond JSON and Markdown. Done when the report can be uploaded by GitHub Actions or common CI test-report collectors.
+- **JUnit report support**: add JUnit XML output for CI systems that collect test reports. SARIF and GitHub Actions annotations are already supported.
 - **Better docs-site crawler examples**: add examples for checking locally built documentation sites, such as MkDocs, Sphinx, or static HTML output. Done when examples avoid live external services and can run deterministically.
-- **Strict unknown handling**: add a `--fail-on unknown` option for teams that want inconclusive links to fail CI. Done when exit-code behavior is documented and tested.
 - **Windows path coverage**: add tests for Windows-style local paths and file URLs. Done when path normalization behavior is explicit in fixtures.
+
+## Completed
+
+- Project configuration through `pyproject.toml` and `.linkchecker-py.toml`, with CLI overrides.
+- GitHub Actions annotations, SARIF output, and strict unknown handling.
+- Run-local HTTP deduplication, fragment-safe crawling, redirect-aware resolution, and bounded retries.
+- Concurrency-safe per-host pacing with coalesced, paced `robots.txt` requests.
+- Source-line propagation and robust local URL query, encoding, and directory handling.
